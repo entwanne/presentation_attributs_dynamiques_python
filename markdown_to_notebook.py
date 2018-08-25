@@ -56,18 +56,23 @@ def iter_files(filenames):
 cells = [make_cell('markdown', [], 'slide')]
 
 for line in iter_files(args.files):
-    if title_split and line.startswith('# '):
+    if cells[-1]['cell_type'] == 'code':
+        if line.startswith('```'):
+            cells.append(make_cell('markdown', []))
+        else:
+            cells[-1]['source'].append(line)
+        continue
+
+    if line.startswith('```python-skip'):
+        cells.append(make_cell('code', [], 'skip'))
+    elif line.startswith('```python'):
+        cells.append(make_cell('code', []))
+    elif title_split and line.startswith('# '):
         cells.append(make_cell('markdown', [line], 'slide'))
         if args.title_page:
             cells.append(make_cell('markdown', [], 'slide'))
     elif line.startswith('---'):
         cells.append(make_cell('markdown', [], 'slide'))
-    elif line.startswith('```python-skip'):
-        cells.append(make_cell('code', [], 'skip'))
-    elif line.startswith('```python'):
-        cells.append(make_cell('code', []))
-    elif line.startswith('```') and cells[-1]['cell_type'] == 'code':
-        cells.append(make_cell('markdown', []))
     else:
         cells[-1]['source'].append(line)
 
