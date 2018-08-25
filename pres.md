@@ -1,7 +1,7 @@
 # La dynamique des attributs
 ## Antoine Rozo
 
-```python-skip
+```python skip
 # Base object
 class Obj:
     pass

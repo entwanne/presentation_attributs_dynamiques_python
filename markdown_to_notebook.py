@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 import argparse
+import enum
 import json
+import re
 import sys
 
 
@@ -54,15 +56,86 @@ def clean_cell(cell):
     return cell
 
 
+class CellType(enum.IntEnum):
+    SLIDE = enum.auto()
+    SUBSLIDE = enum.auto()
+    FRAGMENT = enum.auto()
+    NORMAL = enum.auto()
+    SKIP = enum.auto()
+
+
+class _Token:
+    def __init__(self, _type, line=None, **kwargs):
+        self.type = _type
+        self.line = line
+        self.params = kwargs
+
+    def __repr__(self):
+        args = []
+        if self.line is not None:
+            args.append(repr(self.line))
+        for key, value in self.params.items():
+            args.append(f'{key}={value!r}')
+
+        return f"{self.type}({', '.join(args)})"
+
+
+class Token(enum.Enum):
+    def __call__(self, *args, **kwargs):
+        return _Token(self, *args, **kwargs)
+
+    LINE = enum.auto()
+    FILE = enum.auto()
+    TITLE = enum.auto()
+    AFTER_TITLE = enum.auto()
+    SPLIT = enum.auto()
+    START_CODE = enum.auto()
+    END_CODE = enum.auto()
+
+
+def iter_file(filename):
+    code = False
+
+    with open(filename) as f:
+        for line in f:
+            if code:
+                if line.startswith('```'):
+                    code = False
+                    yield Token.END_CODE(line)
+                else:
+                    yield Token.LINE(line)
+                continue
+
+            match = re.match(r'(#+) ', line)
+            if match:
+                level = len(match.group(1))
+                yield Token.TITLE(line, level=level)
+                yield Token.AFTER_TITLE(level=level)
+            elif line.startswith('---'):
+                yield Token.SPLIT(line)
+            elif line.startswith('```'):
+                code = True
+                args = line[3:].split()
+                skip = 'skip' in args
+                yield Token.START_CODE(line, language=args[0], skip=skip)
+            else:
+                yield Token.LINE(line)
+
+
 def iter_files(filenames):
     for filename in filenames:
-        with open(filename) as f:
-            yield from f
+        yield from iter_file(filename)
+        yield Token.FILE()
 
 
 cells = [make_cell('markdown', [], 'slide')]
 
-for line in iter_files(args.files):
+for token in iter_files(args.files):
+    print(token)
+    line = token.line
+    if line is None:
+        continue
+
     if cells[-1]['cell_type'] == 'code':
         if line.startswith('```'):
             cells.append(make_cell('markdown', []))
@@ -123,5 +196,5 @@ if args.output:
 else:
     f = sys.stdout
 
-with f:
-    json.dump(doc, f, indent=4)
+#with f:
+#    json.dump(doc, f, indent=4)
