@@ -131,11 +131,26 @@ def iter_files(filenames):
 cells = [make_cell('markdown', [], 'slide')]
 
 for token in iter_files(args.files):
-    print(token)
-    line = token.line
-    if line is None:
+    if token.line is None:
         continue
+    lines = cells[-1]['source']
 
+    if token.type is Token.FILE:
+        pass
+    elif token.type is Token.TITLE:
+        lines.append(token.line)
+    elif token.type is Token.AFTER_TITLE:
+        pass
+    elif token.type is Token.SPLIT:
+        pass
+    elif token.type is Token.START_CODE:
+        pass
+    elif token.type is Token.END_CODE:
+        pass
+    else:
+        lines.append(token.line)
+
+    '''
     if cells[-1]['cell_type'] == 'code':
         if line.startswith('```'):
             cells.append(make_cell('markdown', []))
@@ -155,6 +170,7 @@ for token in iter_files(args.files):
         cells.append(make_cell('markdown', [], 'slide'))
     else:
         cells[-1]['source'].append(line)
+    '''
 
 
 cells = (clean_cell(cell) for cell in cells)
@@ -196,5 +212,5 @@ if args.output:
 else:
     f = sys.stdout
 
-#with f:
-#    json.dump(doc, f, indent=4)
+with f:
+    json.dump(doc, f, indent=4)
