@@ -21,8 +21,6 @@ parser.add_argument('-o', '--output', default=None)
 # Option to give configuration file
 args = parser.parse_args()
 
-title_split = args.title_page or args.title_split
-
 
 def make_cell(cell_type, source, slide_type='-'):
     cell = {
@@ -68,7 +66,8 @@ class _Token:
     def __init__(self, _type, line=None, **kwargs):
         self.type = _type
         self.line = line
-        self.params = kwargs
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     def __repr__(self):
         args = []
@@ -131,46 +130,24 @@ def iter_files(filenames):
 cells = [make_cell('markdown', [], 'slide')]
 
 for token in iter_files(args.files):
-    if token.line is None:
-        continue
-    lines = cells[-1]['source']
-
     if token.type is Token.FILE:
         pass
     elif token.type is Token.TITLE:
-        lines.append(token.line)
-    elif token.type is Token.AFTER_TITLE:
-        pass
-    elif token.type is Token.SPLIT:
-        pass
-    elif token.type is Token.START_CODE:
-        pass
-    elif token.type is Token.END_CODE:
-        pass
-    else:
-        lines.append(token.line)
-
-    '''
-    if cells[-1]['cell_type'] == 'code':
-        if line.startswith('```'):
-            cells.append(make_cell('markdown', []))
+        if token.level == 1 and (args.title_page or args.title_split):
+            cells.append(make_cell('markdown', [token.line], 'slide'))
         else:
-            cells[-1]['source'].append(line)
-        continue
-
-    if line.startswith('```python-skip'):
-        cells.append(make_cell('code', [], 'skip'))
-    elif line.startswith('```python'):
-        cells.append(make_cell('code', []))
-    elif title_split and line.startswith('# '):
-        cells.append(make_cell('markdown', [line], 'slide'))
-        if args.title_page:
+            cells[-1]['source'].append(token.line)
+    elif token.type is Token.AFTER_TITLE:
+        if token.level == 1 and args.title_page:
             cells.append(make_cell('markdown', [], 'slide'))
-    elif line.startswith('---'):
+    elif token.type is Token.SPLIT:
         cells.append(make_cell('markdown', [], 'slide'))
-    else:
-        cells[-1]['source'].append(line)
-    '''
+    elif token.type is Token.START_CODE:
+        cells.append(make_cell('code', [], 'skip' if token.skip else '-'))
+    elif token.type is Token.END_CODE:
+        cells.append(make_cell('code', []))
+    elif token.line is not None:
+        cells[-1]['source'].append(token.line)
 
 
 cells = (clean_cell(cell) for cell in cells)
