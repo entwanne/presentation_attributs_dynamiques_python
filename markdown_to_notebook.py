@@ -33,11 +33,18 @@ def make_cell(cell_type, source, slide_type='-'):
     return cell
 
 
-def cell_is_empty(cell):
-    source = cell['source']
-    if not source:
-        return True
-    return not any(line.rstrip('\r\n') for line in source)
+def clean_cell(cell):
+    lines = cell['source']
+
+    while lines and not lines[0].rstrip('\r\n'):
+        lines.pop(0)
+    while lines and not lines[-1].rstrip('\r\n'):
+        lines.pop()
+
+    if lines:
+        lines[-1] = lines[-1].rstrip('\r\n')
+
+    return cell
 
 
 def iter_files(filenames):
@@ -55,6 +62,8 @@ for line in iter_files(args.files):
             cells.append(make_cell('markdown', [], 'slide'))
     elif line.startswith('---'):
         cells.append(make_cell('markdown', [], 'slide'))
+    elif line.startswith('```python-skip'):
+        cells.append(make_cell('code', [], 'skip'))
     elif line.startswith('```python'):
         cells.append(make_cell('code', []))
     elif line.startswith('```') and cells[-1]['cell_type'] == 'code':
@@ -62,7 +71,10 @@ for line in iter_files(args.files):
     else:
         cells[-1]['source'].append(line)
 
-cells = [cell for cell in cells if not cell_is_empty(cell)]
+
+cells = (clean_cell(cell) for cell in cells)
+cells = [cell for cell in cells if cell['source']]
+
 doc = {
     'cells': cells,
     'metadata': {
