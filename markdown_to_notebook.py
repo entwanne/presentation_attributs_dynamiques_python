@@ -129,6 +129,10 @@ def iter_files(filenames):
 
 cells = [make_cell('markdown', [], 'slide')]
 
+# Produce a list of cells and separators
+# A cell is a list of lines with a type (markdown/python)
+# A separator indicates the slide-type of the next cell (slide, subslide, fragment, etc.)
+# The list will then be filtered to remove empty cells and separator will apply on the cell just after
 for token in iter_files(args.files):
     if token.type is Token.FILE:
         pass
