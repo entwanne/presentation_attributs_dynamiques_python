@@ -149,7 +149,7 @@ for token in iter_files(args.files):
     elif token.type is Token.START_CODE:
         cells.append(make_cell('code', [], 'skip' if token.skip else '-'))
     elif token.type is Token.END_CODE:
-        cells.append(make_cell('code', []))
+        cells.append(make_cell('markdown', []))
     elif token.line is not None:
         cells[-1]['source'].append(token.line)
 

@@ -10,6 +10,8 @@ obj = Obj()
 
 # Attributs en Python
 
+* Les attributs permettent d'associer des données à un objet
+
 ```python
 obj.attr = 'foo'
 ```
@@ -23,6 +25,8 @@ del obj.attr
 ```
 
 # Fonctions `getattr` et `hasattr`
+
+* Ces opérations élémentaires sont accessibles depuis des fonctions
 
 ```python
 hasattr(obj, 'bar')
@@ -48,11 +52,17 @@ delattr(obj, 'bar')
 
 # Attribut `__dict__`
 
+* Les données stockées dans un objet le sont dans un dictionnaire `__dict__`
+
 ```python
 obj.__dict__
 ```
 
 # Method Resolution Order (*MRO*)
+
+* L'accès à un attribut ne se contente pas d'explorer le `__dict__` de l'objet
+* Sont aussi analysés celui du type, et de tous les types parents
+* L'ordre d'évaluation des types est défini par le *MRO*
 
 ```python
 class A:
@@ -69,9 +79,13 @@ b.baz = 'b.baz'
 b.foo, b.bar, b.baz
 ```
 
+* On peut connaître le *MRO* d'une classe en faisant appel à sa méthode `mro`
+
 ```python
 B.mro()
 ```
+
+* Celui-ci est surtout utile lors d'héritages multiples, il se base sur l'algorithme C3
 
 ```python
 class P1:
@@ -92,6 +106,12 @@ C.mro()
 ```
 
 # Méthodes spéciales `__getattr__` et `__getattribute__`
+
+* Des méthodes spéciales sont impliquées dans la recherche des attributs d'un objet
+* Lors de l'accès à un attribut, la méthode `__getattribute__` est appelée
+* C'est celle-ci qui s'occupe par défaut d'explorer les dictionnaires d'attributs
+
+* `__getattr__` est appelée lorsqu'un attribut n'est pas trouvé par `__getattribute__`
 
 # Méthodes spéciales `__setattr__` et `__delattr__`
 
