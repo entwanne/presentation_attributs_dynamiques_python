@@ -182,6 +182,9 @@ doc = {
             'pygments_lexer': 'ipython3',
             'version': '3.6.5'
         },
+        "livereveal": {
+            "autolaunch": True
+        }
     },
     'nbformat': 4,
     'nbformat_minor': 2,
