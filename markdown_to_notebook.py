@@ -127,39 +127,49 @@ def iter_files(filenames):
         yield Token.FILE()
 
 
-cells = [make_cell('markdown', [], 'slide')]
+def get_cells(filenames):
+    cell_type, lines = 'markdown', []
+    for token in iter_files(filenames):
+        if token.type is Token.FILE:
+            pass
+        elif token.type is Token.TITLE:
+            if token.level == 1 and (args.title_page or args.title_split):
+                yield cell_type, lines
+                yield 'separator', 'slide'
+                cell_type, lines = 'markdown', [token.line]
+            else:
+                lines.append(token.line)
+        elif token.type is Token.AFTER_TITLE:
+            if token.level == 1 and args.title_page:
+                yield cell_type, lines
+                yield 'separator', 'slide'
+                cell_type, lines = 'markdown', []
+        elif token.type is Token.SPLIT:
+            yield cell_type, lines
+            yield 'separator', 'slide'
+            cell_type, lines = 'markdown', []
+        elif token.type is Token.START_CODE:
+            yield cell_type, lines
+            yield 'separator', 'skip' if token.skip else '-'
+            cell_type, lines = 'code', []
+        elif token.type is Token.END_CODE:
+            yield cell_type, lines
+            cell_type, lines = 'markdown', []
+        elif token.line is not None:
+            lines.append(token.line)
 
-# Produce a list of cells and separators
-# A cell is a list of lines with a type (markdown/python)
-# A separator indicates the slide-type of the next cell (slide, subslide, fragment, etc.)
-# The list will then be filtered to remove empty cells and separator will apply on the cell just after
-for token in iter_files(args.files):
-    if token.type is Token.FILE:
-        pass
-    elif token.type is Token.TITLE:
-        if token.level == 1 and (args.title_page or args.title_split):
-            cells.append(make_cell('markdown', [token.line], 'slide'))
-        else:
-            cells[-1]['source'].append(token.line)
-    elif token.type is Token.AFTER_TITLE:
-        if token.level == 1 and args.title_page:
-            cells.append(make_cell('markdown', [], 'slide'))
-    elif token.type is Token.SPLIT:
-        cells.append(make_cell('markdown', [], 'slide'))
-    elif token.type is Token.START_CODE:
-        cells.append(make_cell('code', [], 'skip' if token.skip else '-'))
-    elif token.type is Token.END_CODE:
-        cells.append(make_cell('markdown', []))
-    elif token.line is not None:
-        cells[-1]['source'].append(token.line)
 
-
-cells = (clean_cell(cell) for cell in cells)
-cells = [cell for cell in cells if cell['source']]
-# Cleaning cells will loss informations on split types
-# Ex: We split after a title to create a new slide, but a codeblock follow the title (with type '-')
-#     The slide cell would be removed (empty) and the code cell keep the type '-' instead of 'slide'
-# => Have on arborescent representation of cells: Slides > Sub-slides > Fragments > - = skip
+cells = []
+slide_type = '-'
+for cell_type, content in get_cells(args.files):
+    if cell_type == 'separator':
+        slide_type = content
+        continue
+    cell = make_cell(cell_type, content, slide_type)
+    cell = clean_cell(cell)
+    if cell['source']:
+        cells.append(cell)
+        slide_type = '-'
 
 doc = {
     'cells': cells,
