@@ -65,7 +65,7 @@ obj.__dict__
 * Ce dictionnaire est utilisé lors de l'accès à un attribut
 
 ```python
-obj.__dict__['foo']
+obj.__dict__['attr']
 ```
 
 # Method Resolution Order (*MRO*)
@@ -155,7 +155,7 @@ class WTF:
     def __getattribute__(self, name):
         return self.__dict__[name]
 
-wtf = Wtf()
+wtf = WTF()
 wtf.foo = 0
 ```
 
