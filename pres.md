@@ -127,6 +127,8 @@ C.foo, C.bar
 * Lors de l'accès à un attribut, la méthode `__getattribute__` est appelée
 * C'est celle-ci qui s'occupe par défaut d'explorer les dictionnaires d'attributs
 
+--------------------
+
 ```python
 class Temperature:
     def __init__(self, celsius=0):
@@ -166,7 +168,7 @@ wtf.foo
 --------------------
 
 * `__getattr__` est appelée lorsqu'un attribut n'est pas trouvé par `__getattribute__`
-* Elle est à privilégier pour gérer des attributs dynamiques en plus des existants
+* Elle permet plus facilement de gérer des attributs dynamiques en plus des existants
 
 ```python
 class Temperature:
@@ -191,6 +193,8 @@ t.fahrenheit
 * Ces méthodes sont appelées respectivement pour l'écriture et la suppression d'un attribut
 * Elles sont appelées dans tous les cas, pour tous les attributs
 
+--------------------
+
 ```python
 class Temperature:
     def __init__(self, celsius=0):
@@ -198,7 +202,7 @@ class Temperature:
 
     def __getattr__(self, name):
         if name == 'fahrenheit':
-            return self.value * 1.8 + 32
+            return self.celsius * 1.8 + 32
         raise AttributeError(name)
 
     def __setattr__(self, name, value):
@@ -208,19 +212,161 @@ class Temperature:
             super().__setattr__(name, value)
 
 t = Temperature()
-t.fahrenheit = 30
+t.fahrenheit = 100
 t.celsius
 ```
 
+--------------------
+
 * Attention encore aux récursions infinies
+
+```python
+class WTF:
+    def __setattr__(self, name, value):
+        super().__setattr__(name, value)
+        self.last_attribute_modified = name
+
+wtf = WTF()
+wtf.foo = 0
+```
+
+--------------------
+
+* Et aux appels par l'initialiseur
+
+```python
+class WTF:
+    def __init__(self, path, prefix=''):
+        self.path = path
+        self.prefix = prefix
+
+    def __setattr__(self, name, value):
+        if name == 'path':
+            self.path = value + self.suffix
+        else:
+            super().__setattr__(self, name, value)
+
+wtf = WTF('foo', '/tmp/')
+```
+
+--------------------
+
+* En raison des potentiels bugs décrits précédemment, évitez au maximum d'avoir recours à ces méthodes
+* Elles sont de plus complexes à utiliser car nécessitent de traiter tous les attributs un à un
+* Heureusement Python nous offre d'autres facilités pour gérer des attributs dynamiques
 
 # Propriétés
 
 * Les propriétés permettent de simplifier l'usage d'attributs dynamiques
+* Elles associent des fonctions de récupération, de modification et de suppression à un nom d'attribut
+* On associe une propriété à un nom d'attribut en la définissant comme attribut de classe
 
-* Décorateur `@property`
+--------------------
+
+```python
+class Temperature:
+    def __init__(self, celsius=0):
+        self.celsius = celsius
+
+    def _get_fahrenheit(self):
+        return self.celsius * 1.8 + 32
+
+    def _set_fahrenheit(self, value):
+        self.celsius = (value - 32) / 1.8
+
+    fahrenheit = property(_get_fahrenheit, _set_fahrenheit)
+
+t = Temperature()
+t.fahrenheit = 100
+t.celsius
+```
+
+--------------------
+
+* `property` peut aussi s'utiliser comme un décorateur
+* Le nom de l'attribut découle alors du nom du *getter*
+
+```python
+class Temperature:
+    def __init__(self, celsius=0):
+        self.celsius = celsius
+
+    @property
+    def fahrenheit(self):
+        return self.celsius * 1.8 + 32
+
+    @fahrenheit.setter
+    def fahrenheit(self, value):
+        self.celsius = (value - 32) / 1.8
+
+t = Temperature()
+t.fahrenheit = 100
+t.celsius
+```
 
 # Descripteurs
+
+* Les propriétés sont un sous-ensemble des descripteurs
+* Un descripteur est un objet spécial qui permet de régir le comportement d'un attribut
+* Il possède pour cela des méthodes `__get__`, `__set__` et `__delete__`
+
+--------------------
+
+* Le descripteur est instancié une seule fois pour toute la classe
+* Ses méthodes spéciales sont appelées lors des différents accès à l'attribut
+* L'objet duquel on accède à l'attribut est alors passé en paramètre
+
+--------------------
+
+```python
+class Fahrenheit:
+    def __get__(self, instance, owner):
+        return instance.celsius * 1.8 + 32
+
+    def __set__(self, instance, value):
+        instance.celsius = (value - 32) / 1.8
+
+class Temperature:
+    def __init__(self, celsius=0):
+        self.celsius = 0
+
+    fahrenheit = Fahrenheit()
+
+t = Temperature()
+t.fahrenheit = 100
+t.celsius
+```
+
+--------------------
+
+* Quel est donc ce paramètre `owner` de la méthode `__get__` ?
+* Un descripteur peut-être récupéré depuis la classe et non depuis une instance de cette classe
+* Dans ce cas, le paramètre `instance` vaudra `None`, et `owner` référence toujours la classe utilisée
+
+--------------------
+
+```python
+class Descriptor:
+    def __get__(self, instance, owner):
+        if instance is None:
+            return f'Attribute of class {owner}'
+        return f'Attribute of {instance}'
+
+class C:
+    attr = Descriptor()
+
+C.attr
+```
+
+```python
+obj = C()
+obj.attr
+```
+
+--------------------
+
+* Ce comportement n'est valable que pour le `__get__`
+* En effet, la redéfinition et la suppression de l'attribut de classe doivent toujours être possibles
 
 # Méthodes
 
