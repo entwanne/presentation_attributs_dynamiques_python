@@ -6,6 +6,8 @@
 * Comprendre le stockage et l'accès aux attributs en Python
 * Mettre en place des attributs dynamiques sur nos objets
 
+* <https://zestedesavoir.com/tutoriels/954/notions-de-python-avancees/>
+
 ```python skip
 # Base object
 class Obj:
@@ -368,8 +370,137 @@ obj.attr
 * Ce comportement n'est valable que pour le `__get__`
 * En effet, la redéfinition et la suppression de l'attribut de classe doivent toujours être possibles
 
+```python
+C.attr = 'foo'
+```
+
+```python
+del C.attr
+```
+
+--------------------
+
+* Depuis Python 3.6, es descripteurs peuvent aussi comporter une méthode `__set_name__` appelée lorsqu'ils sont définis dans une classe
+
+```python
+class cachedescriptor:
+    def __init__(self, func):
+        self.func = func
+
+    def __set_name__(self, owner, name):
+        self.name = name
+
+    def __get__(self, inst, owner):
+        if inst is None:
+            return self
+        if self.name not in inst.__dict__:
+            inst.__dict__[self.name] = self.func(inst)
+        return inst.__dict__[self.name]
+```
+
+--------------------
+
+```python
+class Caluclation:
+    @cachedescriptor
+    def result(self):
+        print('Complex calculation')
+	...
+	return 0
+
+calc = Calculation()
+```
+
+```python
+calc.result
+```
+
 # Méthodes
+
+* Derrière leur apparente simplicité, les méthodes sont en fait des descripteurs
+* C'est ce qui explique la différence entre méthodes et *bound methods*
+
+```python
+class C:
+    def method():
+        pass
+
+C.method
+```
+
+```python
+c = C()
+c.method()
+```
+
+--------------------
+
+* Une méthode est en fait un descripteur autour d'une fonction
+* Ce descripteur réagit différemment suivant si la méthode est accédée depuis la classe ou l'une de ses instances
+
+```python
+from functools import partial
+
+class Method:
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self.func
+        return partial(self.func, instance)
+```
+
+--------------------
+
+* Les méthodes de classe fonctionnent de la même manière en utilisant l'`owner`
+* Les méthodes statiques sont les plus simples et ne dépendent d'aucun descripteur
 
 # Slots
 
+* Tous les objets ne possèdent pas de `__dict__`
+* Il est possible d'optimiser le stockage des attributs en définissant des slots au niveau de la classe
+* Cela évite l'instanciation d'un dictionnaire mais empêche de définir des attributs non déclarés
+
+```python
+class Point:
+    __slots__ = ('x', 'y')
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+```
+
+```python
+p = Point(3, 4)
+p.x, p.y
+```
+
+```python
+p.z = 1
+```
+
+--------------------
+
+* Les classes utilisant des slots restent compatibles avec les mécanismes d'attributs dynamiques
+
+```python
+class Point:
+    __slots__ = ('x', 'y')
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    @property
+    def distance(self):
+        return (self.x**2 + self.y**2)**0.5
+
+p = Point(3, 4)
+p.distance
+```
+
 # Python 3.7 : Module et `__getattr__`
+
+* Depuis Python 3.7, les modules peuvent aussi définir une méthode spéciale `__getattr__`
+* Ils permettent plus facilement de gérer des attributs dynamiques au niveau d'un module
