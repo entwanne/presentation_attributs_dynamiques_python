@@ -1,7 +1,7 @@
 # La dynamique des attributs
-## Antoine Rozo
+### Antoine Rozo
 
-# La dynamique des attributs
+## La dynamique des attributs
 
 * Comprendre le stockage et l'accès aux attributs en Python
 * Mettre en place des attributs dynamiques sur nos objets
@@ -17,6 +17,8 @@ obj = Obj()
 
 # Attributs en Python
 
+## Attributs en Python
+
 * Les attributs permettent d'associer des données à un objet
 
 ```python
@@ -31,7 +33,7 @@ obj.attr
 del obj.attr
 ```
 
-# Fonctions `getattr`, `setattr` et `delattr`
+## Fonctions `getattr`, `setattr` et `delattr`
 
 * Ces opérations élémentaires correspondent à des fonctions Python
 
@@ -47,7 +49,7 @@ setattr(obj, 'bar', 10)
 delattr(obj, 'bar')
 ```
 
-# Fonctions `hasattr`
+## Fonction `hasattr`
 
 * Une fonction supplémentaire permet de tester la présence d'un attribut
 
@@ -55,7 +57,7 @@ delattr(obj, 'bar')
 hasattr(obj, 'bar')
 ```
 
-# Stockage des attributs
+## Stockage des attributs
 
 * Les objets Python possèdent un attribut spécial, `__dict__`
 * Il s'agit d'un dictionnaire qui stocke toutes les données de l'objet
@@ -72,11 +74,13 @@ obj.__dict__['attr']
 
 # Method Resolution Order (*MRO*)
 
+## Method Resolution Order (*MRO*)
+
 * L'accès à un attribut ne se contente pas d'explorer le `__dict__` de l'objet
 * Sont aussi analysés celui du type, et de tous les types parents
 * L'ordre d'évaluation des types est défini par le *MRO*
 
---------------------
+## Method Resolution Order (*MRO*)
 
 ```python
 class A:
@@ -93,7 +97,8 @@ b.baz = 'b.baz'
 b.foo, b.bar, b.baz
 ```
 
---------------------
+
+## Method Resolution Order (*MRO*)
 
 * On peut connaître le *MRO* d'une classe en faisant appel à sa méthode `mro`
 
@@ -101,7 +106,8 @@ b.foo, b.bar, b.baz
 B.mro()
 ```
 
---------------------
+
+## Method Resolution Order (*MRO*)
 
 * Celui-ci est surtout utile lors d'héritages multiples, il se base sur l'algorithme C3
 
@@ -123,13 +129,15 @@ C.mro()
 C.foo, C.bar
 ```
 
-# Méthodes spéciales `__getattr__` et `__getattribute__`
+# Méthodes spéciales liées aux attributs
+
+## `__getattr__` et `__getattribute__`
 
 * Des méthodes spéciales sont impliquées dans la recherche des attributs d'un objet
 * Lors de l'accès à un attribut, la méthode `__getattribute__` est appelée
 * C'est celle-ci qui s'occupe par défaut d'explorer les dictionnaires d'attributs
 
---------------------
+## `__getattr__` et `__getattribute__`
 
 ```python
 class Temperature:
@@ -150,7 +158,7 @@ t.celsius
 t.fahrenheit
 ```
 
---------------------
+## Pièges de `__getattribute__`
 
 * Attention aux cas de récursions infinies
 
@@ -167,7 +175,7 @@ wtf.foo = 0
 wtf.foo
 ```
 
---------------------
+## `__getattr__` et `__getattribute__`
 
 * `__getattr__` est appelée lorsqu'un attribut n'est pas trouvé par `__getattribute__`
 * Elle permet plus facilement de gérer des attributs dynamiques en plus des existants
@@ -190,12 +198,12 @@ t.celsius
 t.fahrenheit
 ```
 
-# Méthodes spéciales `__setattr__` et `__delattr__`
+## `__setattr__` et `__delattr__`
 
 * Ces méthodes sont appelées respectivement pour l'écriture et la suppression d'un attribut
 * Elles sont appelées dans tous les cas, pour tous les attributs
 
---------------------
+## `__setattr__` et `__delattr__`
 
 ```python
 class Temperature:
@@ -218,7 +226,7 @@ t.fahrenheit = 100
 t.celsius
 ```
 
---------------------
+## Pièges de `__setattr__`
 
 * Attention encore aux récursions infinies
 
@@ -232,7 +240,7 @@ wtf = WTF()
 wtf.foo = 0
 ```
 
---------------------
+## Pièges de `__setattr__`
 
 * Et aux appels par l'initialiseur
 
@@ -251,7 +259,7 @@ class WTF:
 wtf = WTF('foo', '/tmp/')
 ```
 
---------------------
+## Méthodes spéciales liées aux attributs
 
 * En raison des potentiels bugs décrits précédemment, évitez au maximum d'avoir recours à ces méthodes
 * Elles sont de plus complexes à utiliser car nécessitent de traiter tous les attributs un à un
@@ -259,11 +267,13 @@ wtf = WTF('foo', '/tmp/')
 
 # Propriétés
 
+## Propriétés
+
 * Les propriétés permettent de simplifier l'usage d'attributs dynamiques
 * Elles associent des fonctions de récupération, de modification et de suppression à un nom d'attribut
 * On associe une propriété à un nom d'attribut en la définissant comme attribut de classe
 
---------------------
+## Propriétés
 
 ```python
 class Temperature:
@@ -283,7 +293,7 @@ t.fahrenheit = 100
 t.celsius
 ```
 
---------------------
+## Décorateur `@property`
 
 * `property` peut aussi s'utiliser comme un décorateur
 * Le nom de l'attribut découle alors du nom du *getter*
@@ -308,17 +318,19 @@ t.celsius
 
 # Descripteurs
 
+## Descripteurs
+
 * Les propriétés sont un sous-ensemble des descripteurs
 * Un descripteur est un objet spécial qui permet de régir le comportement d'un attribut
 * Il possède pour cela des méthodes `__get__`, `__set__` et `__delete__`
 
---------------------
+## Descripteurs
 
 * Le descripteur est instancié une seule fois pour toute la classe
 * Ses méthodes spéciales sont appelées lors des différents accès à l'attribut
 * L'objet duquel on accède à l'attribut est alors passé en paramètre
 
---------------------
+## Descripteurs
 
 ```python
 class Fahrenheit:
@@ -339,13 +351,13 @@ t.fahrenheit = 100
 t.celsius
 ```
 
---------------------
+## Méthode `__get__` des descripteurs
 
 * Quel est donc ce paramètre `owner` de la méthode `__get__` ?
 * Un descripteur peut-être récupéré depuis la classe et non depuis une instance de cette classe
 * Dans ce cas, le paramètre `instance` vaudra `None`, et `owner` référence toujours la classe utilisée
 
---------------------
+## Méthode `__get__` des descripteurs
 
 ```python
 class Descriptor:
@@ -365,7 +377,7 @@ obj = C()
 obj.attr
 ```
 
---------------------
+## Méthode `__get__` des descripteurs
 
 * Ce comportement n'est valable que pour le `__get__`
 * En effet, la redéfinition et la suppression de l'attribut de classe doivent toujours être possibles
@@ -378,7 +390,7 @@ C.attr = 'foo'
 del C.attr
 ```
 
---------------------
+## Méthode `__set_name__`
 
 * Depuis Python 3.6, es descripteurs peuvent aussi comporter une méthode `__set_name__` appelée lorsqu'ils sont définis dans une classe
 
@@ -398,7 +410,7 @@ class cachedescriptor:
         return inst.__dict__[self.name]
 ```
 
---------------------
+## Méthode `__set_name__`
 
 ```python
 class Caluclation:
@@ -417,6 +429,8 @@ calc.result
 
 # Méthodes
 
+## Méthodes
+
 * Derrière leur apparente simplicité, les méthodes sont en fait des descripteurs
 * C'est ce qui explique la différence entre méthodes et *bound methods*
 
@@ -433,9 +447,9 @@ c = C()
 c.method()
 ```
 
---------------------
+## Méthodes
 
-* Une méthode est en fait un descripteur autour d'une fonction
+* Une méthode est en alors un descripteur autour d'une fonction
 * Ce descripteur réagit différemment suivant si la méthode est accédée depuis la classe ou l'une de ses instances
 
 ```python
@@ -451,12 +465,14 @@ class Method:
         return partial(self.func, instance)
 ```
 
---------------------
+## Méthodes
 
 * Les méthodes de classe fonctionnent de la même manière en utilisant l'`owner`
 * Les méthodes statiques sont les plus simples et ne dépendent d'aucun descripteur
 
 # Slots
+
+## Slots
 
 * Tous les objets ne possèdent pas de `__dict__`
 * Il est possible d'optimiser le stockage des attributs en définissant des slots au niveau de la classe
@@ -480,7 +496,7 @@ p.x, p.y
 p.z = 1
 ```
 
---------------------
+## Slots
 
 * Les classes utilisant des slots restent compatibles avec les mécanismes d'attributs dynamiques
 
@@ -500,7 +516,11 @@ p = Point(3, 4)
 p.distance
 ```
 
-# Python 3.7 : Module et `__getattr__`
+# Conclusion
+
+## Python 3.7 : Module et `__getattr__`
 
 * Depuis Python 3.7, les modules peuvent aussi définir une méthode spéciale `__getattr__`
 * Ils permettent plus facilement de gérer des attributs dynamiques au niveau d'un module
+
+## Conclusion

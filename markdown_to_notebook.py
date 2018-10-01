@@ -109,7 +109,7 @@ def iter_file(filename):
             if match:
                 level = len(match.group(1))
                 yield Token.TITLE(line, level=level)
-                yield Token.AFTER_TITLE(level=level)
+                yield Token.AFTER_TITLE(line, level=level)
             elif line.startswith('---'):
                 yield Token.SPLIT(line)
             elif line.startswith('```'):
@@ -133,20 +133,24 @@ def get_cells(filenames):
         if token.type is Token.FILE:
             pass
         elif token.type is Token.TITLE:
-            if token.level == 1 and (args.title_page or args.title_split):
+            if token.level <= 1 and (args.title_page or args.title_split):
                 yield cell_type, lines
                 yield 'separator', 'slide'
+                cell_type, lines = 'markdown', [token.line]
+            elif token.level <= 2 and args.title_split:
+                yield cell_type, lines
+                yield 'separator', 'subslide'
                 cell_type, lines = 'markdown', [token.line]
             else:
                 lines.append(token.line)
         elif token.type is Token.AFTER_TITLE:
             if token.level == 1 and args.title_page:
                 yield cell_type, lines
-                yield 'separator', 'slide'
+                yield 'separator', 'subslide'
                 cell_type, lines = 'markdown', []
         elif token.type is Token.SPLIT:
             yield cell_type, lines
-            yield 'separator', 'slide'
+            yield 'separator', 'subslide'
             cell_type, lines = 'markdown', []
         elif token.type is Token.START_CODE:
             yield cell_type, lines
