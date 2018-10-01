@@ -1,19 +1,19 @@
 # La dynamique des attributs
 ### Antoine Rozo
 
+```python skip
+# Base object
+class Obj:
+    pass
+dana = Obj()
+```
+
 ## La dynamique des attributs
 
 * Comprendre le stockage et l'accès aux attributs en Python
 * Mettre en place des attributs dynamiques sur nos objets
 
 * <https://zestedesavoir.com/tutoriels/954/notions-de-python-avancees/>
-
-```python skip
-# Base object
-class Obj:
-    pass
-obj = Obj()
-```
 
 # Attributs en Python
 
@@ -22,31 +22,31 @@ obj = Obj()
 * Les attributs permettent d'associer des données à un objet
 
 ```python
-obj.attr = 'foo'
+dana.attr = 10
 ```
 
 ```python
-obj.attr
+dana.attr
 ```
 
 ```python
-del obj.attr
+del dana.attr
 ```
 
-## Fonctions `getattr`, `setattr` et `delattr`
+## Fonctions `setattr`, `getattr` et `delattr`
 
 * Ces opérations élémentaires correspondent à des fonctions Python
 
 ```python
-getattr(obj, 'bar')
+setattr(dana, 'foo', 'bar')
 ```
 
 ```python
-setattr(obj, 'bar', 10)
+getattr(dana, 'foo')
 ```
 
 ```python
-delattr(obj, 'bar')
+delattr(dana, 'foo')
 ```
 
 ## Fonction `hasattr`
@@ -54,7 +54,7 @@ delattr(obj, 'bar')
 * Une fonction supplémentaire permet de tester la présence d'un attribut
 
 ```python
-hasattr(obj, 'bar')
+hasattr(dana, 'foo')
 ```
 
 ## Stockage des attributs
@@ -63,13 +63,13 @@ hasattr(obj, 'bar')
 * Il s'agit d'un dictionnaire qui stocke toutes les données de l'objet
 
 ```python
-obj.__dict__
+dana.__dict__
 ```
 
 * Ce dictionnaire est utilisé lors de l'accès à un attribut
 
 ```python
-obj.__dict__['attr']
+dana.__dict__['foo']
 ```
 
 # Method Resolution Order (*MRO*)
@@ -377,7 +377,7 @@ obj = C()
 obj.attr
 ```
 
-## Méthode `__get__` des descripteurs
+## Descripteurs
 
 * Ce comportement n'est valable que pour le `__get__`
 * En effet, la redéfinition et la suppression de l'attribut de classe doivent toujours être possibles
@@ -413,12 +413,12 @@ class cachedescriptor:
 ## Méthode `__set_name__`
 
 ```python
-class Caluclation:
+class Calculation:
     @cachedescriptor
     def result(self):
         print('Complex calculation')
-	...
-	return 0
+        ...
+        return 0
 
 calc = Calculation()
 ```
@@ -436,7 +436,7 @@ calc.result
 
 ```python
 class C:
-    def method():
+    def method(self):
         pass
 
 C.method
@@ -444,7 +444,7 @@ C.method
 
 ```python
 c = C()
-c.method()
+c.method
 ```
 
 ## Méthodes
