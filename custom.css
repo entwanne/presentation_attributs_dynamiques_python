@@ -28,13 +28,13 @@ This will always be an empty file in IPython
     color: #424242;
 }
 
-#notebook .text_cell h1 {
+#notebook .text_cell h1, #notebook .text_cell h1 * {
     color: #084561;
-    /*border-bottom: 3px solid #F8AD32;*/
     text-decoration: underline;
     text-decoration-color: #F8AD32;
+    text-align: center;
 }
 
-#notebook .text_cell h2, #notebook .text_cell h3 {
+#notebook .text_cell h2, #notebook .text_cell h3, #notebook .text_cell h2 *, #notebook .text_cell h3 * {
     color: #ea9408;
 }
