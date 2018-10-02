@@ -1,4 +1,4 @@
-# Méthodes spéciales liées aux attributs
+# Attributs et méthodes spéciales
 
 ## `__getattr__` et `__getattribute__`
 
@@ -128,7 +128,7 @@ class WTF:
 wtf = WTF('foo', '/tmp/')
 ```
 
-## Méthodes spéciales liées aux attributs
+## Attributs et méthodes spéciales
 
 * En raison des potentiels bugs décrits précédemment, évitez au maximum d'avoir recours à ces méthodes
 * Elles sont de plus complexes à utiliser car nécessitent de traiter tous les attributs un à un

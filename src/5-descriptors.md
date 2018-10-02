@@ -74,7 +74,7 @@ del C.attr
 
 ## Méthode `__set_name__`
 
-* Depuis Python 3.6, es descripteurs peuvent aussi comporter une méthode `__set_name__` appelée lorsqu'ils sont définis dans une classe
+* Depuis Python 3.6, les descripteurs peuvent aussi comporter une méthode `__set_name__` appelée lorsqu'ils sont définis dans une classe
 
 ```python
 class cachedescriptor:

@@ -1,12 +1,12 @@
 # Method Resolution Order (*MRO*)
 
-## Method Resolution Order (*MRO*)
+## Method Resolution Order
 
 * L'accès à un attribut ne se contente pas d'explorer le `__dict__` de l'objet
 * Sont aussi analysés celui du type, et de tous les types parents
 * L'ordre d'évaluation des types est défini par le *MRO*
 
-## Method Resolution Order (*MRO*)
+## Method Resolution Order
 
 ```python
 class A:
@@ -24,7 +24,7 @@ b.foo, b.bar, b.baz
 ```
 
 
-## Method Resolution Order (*MRO*)
+## Method Resolution Order
 
 * On peut connaître le *MRO* d'une classe en faisant appel à sa méthode `mro`
 
@@ -33,7 +33,7 @@ B.mro()
 ```
 
 
-## Method Resolution Order (*MRO*)
+## Method Resolution Order
 
 * Celui-ci est surtout utile lors d'héritages multiples, il se base sur l'algorithme C3
 
