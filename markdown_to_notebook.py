@@ -160,6 +160,7 @@ def get_cells(filenames):
             cell_type, lines = 'markdown', []
         elif token.line is not None:
             lines.append(token.line)
+    yield cell_type, lines
 
 
 cells = []
