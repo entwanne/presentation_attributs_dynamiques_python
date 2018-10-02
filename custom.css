@@ -35,6 +35,11 @@ This will always be an empty file in IPython
     text-align: center;
 }
 
-#notebook .text_cell h2, #notebook .text_cell h3, #notebook .text_cell h2 *, #notebook .text_cell h3 * {
+#notebook .text_cell h2, #notebook .text_cell h2 * {
     color: #ea9408;
+}
+
+#notebook .text_cell h3, #notebook .text_cell h3 * {
+    color: #ea9408;
+    text-align: center;
 }

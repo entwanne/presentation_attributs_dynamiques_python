@@ -1,5 +1,6 @@
 # La dynamique des attributs
-### Antoine Rozo
+### Emmenez-moi au bout de l'attr
+#### <div align="right">Antoine Rozo</div>
 
 ```python skip
 # Base object
@@ -7,6 +8,10 @@ class Obj:
     pass
 dana = Obj()
 ```
+
+--------------------
+
+<center><img src="zestedesavoir.png" style="height: 20em;" /></center>
 
 ## La dynamique des attributs
 

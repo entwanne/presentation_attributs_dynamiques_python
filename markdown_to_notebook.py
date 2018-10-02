@@ -9,8 +9,8 @@ import sys
 
 parser = argparse.ArgumentParser()
 parser.add_argument('files', metavar='file', nargs='+', help='Files to compute')
-parser.add_argument('-t', '--title-split', action='store_true')
-parser.add_argument('-p', '--title-page', action='store_true')
+#parser.add_argument('-t', '--title-split', action='store_true')
+#parser.add_argument('-p', '--title-page', action='store_true')
 parser.add_argument('-o', '--output', default=None)
 # Add argument to split on files
 # + choose the type of slide when split (ex: file=slide, title=sub-slide or subtitle=sub-slide)
@@ -20,6 +20,9 @@ parser.add_argument('-o', '--output', default=None)
 # Each split gives the type of the following cell
 # Option to give configuration file
 args = parser.parse_args()
+
+title_split = {1: 'slide', 2: 'subslide'}
+title_split_after = {}
 
 
 def make_cell(cell_type, source, slide_type='-'):
@@ -133,20 +136,16 @@ def get_cells(filenames):
         if token.type is Token.FILE:
             pass
         elif token.type is Token.TITLE:
-            if token.level <= 1 and (args.title_page or args.title_split):
+            if token.level in title_split:
                 yield cell_type, lines
-                yield 'separator', 'slide'
-                cell_type, lines = 'markdown', [token.line]
-            elif token.level <= 2 and args.title_split:
-                yield cell_type, lines
-                yield 'separator', 'subslide'
+                yield 'separator', title_split[token.level]
                 cell_type, lines = 'markdown', [token.line]
             else:
                 lines.append(token.line)
         elif token.type is Token.AFTER_TITLE:
-            if token.level == 1 and args.title_page:
+            if token.level in title_split_after:
                 yield cell_type, lines
-                yield 'separator', 'subslide'
+                yield 'separator', title_page[token.level]
                 cell_type, lines = 'markdown', []
         elif token.type is Token.SPLIT:
             yield cell_type, lines
