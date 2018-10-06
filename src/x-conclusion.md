@@ -9,4 +9,11 @@
 
 * *Complex is better than complicated*
 
+* *Slides* : <https://github.com/entwanne/presentation_attributs_dynamiques_python/blob/exports/pres.ipynb> (<https://bit.ly/2PhbIEL>)
+* <https://zestedesavoir.com/tutoriels/954/notions-de-python-avancees/>
+
+#### <div align="right">Antoine (entwanne) Rozo</div>
+
+<div align="right"><img src="schtroumpf_flat_rounded.png" style="width: 5em;" /></div align="right">
+
 ## Questions ?
