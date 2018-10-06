@@ -36,6 +36,7 @@ B.mro()
 ## Method Resolution Order
 
 * Celui-ci est surtout utile lors d'héritages multiples, il se base sur l'algorithme C3
+* Il permet de linéariser la hiérarchie des classes parentes
 
 ```python
 class P1:
@@ -53,4 +54,66 @@ C.mro()
 
 ```python
 C.foo, C.bar
+```
+
+## Method Resolution Order
+
+```python
+object.mro()
+```
+
+```python
+class A: pass
+
+A.mro()
+```
+
+```python
+class B(A): pass
+
+B.mro()
+```
+
+```python
+class C: pass
+
+C.mro()
+```
+
+## Method Resolution Order
+
+```python
+class D(A, C): pass
+
+D.mro()
+```
+
+```python
+class E(B, C): pass
+
+E.mro()
+```
+
+```python
+class F(D, E): pass
+
+F.mro()
+```
+
+```python
+class G(E, D): pass
+
+G.mro()
+```
+
+## *MRO* de l'impossible
+
+```python
+class H(A, B): pass
+```
+
+```python
+class H(B, A): pass
+
+H.mro()
 ```

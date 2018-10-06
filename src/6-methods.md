@@ -39,4 +39,23 @@ class Method:
 ## Méthodes
 
 * Les méthodes de classe fonctionnent de la même manière en utilisant l'`owner`
+
+```python
+class ClassMethod:
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, instance, owner):
+        return partial(self.func, owner)
+```
+
 * Les méthodes statiques sont les plus simples et ne dépendent d'aucun descripteur
+
+```python
+class StaticMethod:
+    def __init__(self, func):
+        self.func = func
+
+    def __get__(self, instance, owner):
+        return self.func
+```

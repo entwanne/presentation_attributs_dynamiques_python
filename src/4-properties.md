@@ -48,3 +48,30 @@ t = Temperature()
 t.fahrenheit = 100
 t.celsius
 ```
+
+## Propriétés en lecture seule
+
+* Le *getter* peut être implémenté sans le *setter*
+
+```python
+class Rect:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+    @property
+    def perimeter(self):
+        return 2 * (self.width + self.height)
+    @property
+    def area(self):
+        return self.width * self.height
+
+rect = Rect(10, 20)
+```
+
+```python
+rect.perimeter
+```
+
+```python
+rect.area
+```

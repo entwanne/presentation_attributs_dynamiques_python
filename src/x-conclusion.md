@@ -7,4 +7,6 @@
 
 ## Conclusion
 
+* *Complex is better than complicated*
+
 ## Questions ?

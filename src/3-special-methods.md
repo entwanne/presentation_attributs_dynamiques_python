@@ -6,6 +6,16 @@
 * Lors de l'accès à un attribut, la méthode `__getattribute__` est appelée
 * C'est celle-ci qui s'occupe par défaut d'explorer les dictionnaires d'attributs
 
+```python
+def __getattribute__(self, name):
+    if name in self.__dict__:
+        return self.__dict__[name]
+    for cls in type(self).mro():
+        if name in cls.__dict__:
+            return cls.__dict__[name]
+    raise AttributeError
+```
+
 ## `__getattr__` et `__getattribute__`
 
 ```python
