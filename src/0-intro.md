@@ -1,6 +1,8 @@
 # La dynamique des attributs
 ### Emmenez-moi au bout de l'attr
-#### <div align="right">Antoine Rozo</div>
+#### <div align="right">Antoine (entwanne) Rozo</div>
+
+<div align="right"><img src="schtroumpf_flat_rounded.png" style="width: 5em;" /></div align="right">
 
 ```python skip
 # Base object
