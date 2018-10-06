@@ -4,6 +4,8 @@
 
 <div align="right"><img src="schtroumpf_flat_rounded.png" style="width: 5em;" /></div align="right">
 
+<div align="right"><small><i>CC BY-SA</i></small></div align="right">
+
 ```python skip
 # Base object
 class Obj:
