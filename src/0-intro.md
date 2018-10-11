@@ -1,21 +1,14 @@
-# La dynamique des attributs
-### Emmenez-moi au bout de l'attr ♫
-#### <div align="right">Antoine (entwanne) Rozo</div>
+## La dynamique des attributs
+### \center Emmenez-moi au bout de l'attr ♫
+#### \hfill Antoine (entwanne) Rozo
 
-<div align="right"><img src="schtroumpf_flat_rounded.png" style="width: 5em;" /></div>
+\hfill \includegraphics[width=5em]{schtroumpf_flat_rounded.png}
 
-<div align="right"><small><i>CC BY-SA</i></small></div>
-
-```python skip
-# Base object
-class Obj:
-    pass
-dana = Obj()
-```
+\hfill {\small \em CC BY-SA}
 
 --------------------
 
-<center><img src="zestedesavoir.png" style="height: 20em;" /></center>
+\center \includegraphics[height=20em]{zestedesavoir.png}
 
 ## La dynamique des attributs
 

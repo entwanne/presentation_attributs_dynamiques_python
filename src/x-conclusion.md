@@ -12,8 +12,9 @@
 * *Slides* : <https://entwanne.github.io/presentation_attributs_dynamiques_python/pres.slides.html>
 * <https://zestedesavoir.com/tutoriels/954/notions-de-python-avancees/>
 
-#### <div align="right">Antoine (entwanne) Rozo</div>
+#### \hfill Antoine (entwanne) Rozo
 
-<div align="right"><img src="schtroumpf_flat_rounded.png" style="width: 5em;" /></div>
+\hfill \includegraphics[width=5em]{schtroumpf_flat_rounded.png}
+
 
 ## Questions ?
