@@ -14,6 +14,6 @@
 
 #### <div align="right">Antoine (entwanne) Rozo</div>
 
-<div align="right"><img src="schtroumpf_flat_rounded.png" style="width: 5em;" /></div align="right">
+<div align="right"><img src="schtroumpf_flat_rounded.png" style="width: 5em;" /></div>
 
 ## Questions ?
