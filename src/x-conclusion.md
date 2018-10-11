@@ -9,7 +9,7 @@
 
 * *Complex is better than complicated*
 
-* *Slides* : <https://github.com/entwanne/presentation_attributs_dynamiques_python/blob/exports/pres.ipynb> (<https://bit.ly/2PhbIEL>)
+* *Slides* : <https://entwanne.github.io/presentation_attributs_dynamiques_python/pres.slides.html>
 * <https://zestedesavoir.com/tutoriels/954/notions-de-python-avancees/>
 
 #### <div align="right">Antoine (entwanne) Rozo</div>
